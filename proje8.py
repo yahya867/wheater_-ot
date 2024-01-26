@@ -9,9 +9,8 @@ WiFi_SSID = 'note10'
 WiFi_password = '12341234'
 TCP_ServerIP = "api.thingspeak.com"
 Port = 80
-API_KEY = 'JV8VW86R5G1FZY95'
+API_KEY = 'your api key'
 uart = UART(0, 115200)
-uart_HC05 = UART(1, 9600) 
 sensor = dht.DHT11(Pin(3))
 soil = ADC(Pin(27))
 Raindrop_AO = ADC(4)
@@ -21,8 +20,7 @@ def send_data(temperature, hum, pressure, moist, yagmur):
     data_thingspeak = "GET /update?key=" + API_KEY + "&field1=%s&field2=%s&field3=%s&field4=%s&field5=%s" % (
         temperature, hum, pressure, moist, yagmur) + "\r\n"
 
-    data_HC05 = "Temperature: %s, Humidity: %s, Pressure: %s, Moisture: %s, Rain: %s" % (
-        temperature, hum, pressure, moist, yagmur)
+  
 
     sendAT("AT+CIPSTART=\"TCP\",\"" + TCP_ServerIP + "\"," + str(Port), "OK", 5000)
     sendAT("AT+CIPSEND=" + str(len(data_thingspeak)) + '\r\n', "OK")
@@ -31,8 +29,7 @@ def send_data(temperature, hum, pressure, moist, yagmur):
     print("Sending to ThingSpeak:", data_thingspeak)
     sendAT('AT+CIPCLOSE' + '\r\n', "OK")
 
-    uart_HC05.write(data_HC05 + "\r\n")
-    print("Sending to HC-05:", data_HC05)
+
 
 def sendAT(cmd, ack, timeout=2000):
     uart.write(cmd + '\r\n')
